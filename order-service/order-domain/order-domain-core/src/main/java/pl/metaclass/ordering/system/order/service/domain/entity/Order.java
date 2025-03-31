@@ -7,6 +7,7 @@ import pl.metaclass.ordering.system.order.service.domain.valueobject.OrderItemId
 import pl.metaclass.ordering.system.order.service.domain.valueobject.StreetAddress;
 import pl.metaclass.ordering.system.order.service.domain.valueobject.TrackingId;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -70,6 +71,49 @@ public class Order extends AggregateRoot<OrderId> {
 	private void validateItemPrice(OrderItem orderItem) {
 		if (!orderItem.isPriceValid()) {
 			throw new OrderDomainException("Order item price is invalid");
+		}
+	}
+
+	public void pay() {
+		if (orderStatus != OrderStatus.PENDING) {
+			throw new OrderDomainException("Order should be pending");
+		}
+
+		orderStatus = OrderStatus.PAID;
+	}
+
+	public void approve() {
+		if (orderStatus != OrderStatus.PAID) {
+			throw new OrderDomainException("Order should be paid");
+		}
+
+		orderStatus = OrderStatus.APPROVED;
+	}
+
+	public void initCancel(List<String> messages) {
+		if (orderStatus != OrderStatus.PAID) {
+			throw new OrderDomainException("Order should be paid");
+		}
+
+		orderStatus = OrderStatus.CANCELLING;
+		updateFailureMessages(messages);
+	}
+
+	public void cancel(List<String> messages) {
+		if (orderStatus != OrderStatus.CANCELLING && orderStatus != OrderStatus.PENDING) {
+			throw new OrderDomainException("Order should be cancelling or pending");
+		}
+
+		orderStatus = OrderStatus.CANCELLED;
+		updateFailureMessages(messages);
+	}
+
+	private void updateFailureMessages(List<String> messages) {
+		if (messages != null) {
+			if (failureMessages == null) {
+				failureMessages = new ArrayList<>();
+			}
+			failureMessages.addAll(messages.stream().filter(message -> !message.isEmpty()).toList());
 		}
 	}
 
