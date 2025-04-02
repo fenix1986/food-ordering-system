@@ -9,6 +9,7 @@ import pl.metaclass.ordering.system.domain.valueobject.RestaurantId;
 import pl.metaclass.ordering.system.order.service.domain.dto.create.CreateOrderCommand;
 import pl.metaclass.ordering.system.order.service.domain.dto.create.CreateOrderResponse;
 import pl.metaclass.ordering.system.order.service.domain.dto.create.OrderAddress;
+import pl.metaclass.ordering.system.order.service.domain.dto.track.TrackOrderResponse;
 import pl.metaclass.ordering.system.order.service.domain.entity.Order;
 import pl.metaclass.ordering.system.order.service.domain.entity.OrderItem;
 import pl.metaclass.ordering.system.order.service.domain.entity.Product;
@@ -44,6 +45,14 @@ public class OrderDataMapper {
 		return CreateOrderResponse.builder()
 				.orderTrackingId(order.getTrackingId().getValue())
 				.orderStatus(order.getOrderStatus())
+				.build();
+	}
+
+	public TrackOrderResponse orderToTrackOrderResponse(Order order) {
+		return TrackOrderResponse.builder()
+				.orderTrackingId(order.getTrackingId().getValue())
+				.orderStatus(order.getOrderStatus())
+				.failureMessages(order.getFailureMessages())
 				.build();
 	}
 
