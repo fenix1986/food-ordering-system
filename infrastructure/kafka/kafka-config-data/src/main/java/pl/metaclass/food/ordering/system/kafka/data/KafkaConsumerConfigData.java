@@ -7,12 +7,12 @@ import org.springframework.context.annotation.Configuration;
 @Data
 @Configuration
 @ConfigurationProperties(prefix = "kafka-consumer-config")
-class KafkaConsumerConfigData {
+public class KafkaConsumerConfigData {
 	private String keyDeserializer;
 	private String valueDeserializer;
 	private String autoOffsetReset;
 	private String specificAvroReaderKey;
-	private String specificAvroReaderValue;
+	private String specificAvroReader;
 	private Boolean batchListener;
 	private Boolean autoStartup;
 	private Integer concurrencyLevel;

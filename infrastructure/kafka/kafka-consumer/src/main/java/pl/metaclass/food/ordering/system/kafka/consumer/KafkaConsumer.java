@@ -1,0 +1,9 @@
+package pl.metaclass.food.ordering.system.kafka.consumer;
+
+import org.apache.avro.specific.SpecificRecord;
+
+import java.util.List;
+
+public interface KafkaConsumer<T extends SpecificRecord> {
+	void receive(List<T> messages, List<Long> keys, List<Integer> partitions, List<Long> offsets);
+}
